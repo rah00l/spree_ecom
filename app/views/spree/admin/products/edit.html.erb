@@ -1,0 +1,32 @@
+<%= render :partial => 'spree/admin/shared/product_sub_menu' %>
+
+<%= render :partial => 'spree/admin/shared/product_tabs', :locals => { :current => 'Product Details' } %>
+<%= render :partial => 'spree/shared/error_messages', :locals => { :target => @product } %>
+
+<%= form_for [:admin, @product], :method => :put, :html => { :multipart => true } do |f| %>
+  <%= render :partial => 'form', :locals => { :f => f } %>
+  <%= render 'image', :locals => { :f => f } %>
+  <div id="taxons" ></div>
+<br />
+<p data-hook="links">
+    <%= link_to icon('add') + ' ' + t(:taxons), main_app.selected_product_taxons_path(@product), :id => 'select_taxons_link' ,:remote => true %>
+</p>
+
+  <%= render :partial => 'spree/admin/shared/edit_resource_links' %>
+<% end %>
+
+
+<script>
+  $(document).ready(function(){
+    $('#select_taxons_link').click(function (event) {
+      event.preventDefault();
+      $(this).hide();
+      $('#taxons').show();
+      $.ajax({type: 'GET',
+        url: this.href,
+        data: ({authenticity_token: AUTH_TOKEN})
+      });
+    });
+
+  });
+</script>

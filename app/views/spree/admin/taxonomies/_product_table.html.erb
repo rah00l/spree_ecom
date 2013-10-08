@@ -1,0 +1,27 @@
+<table class="index">
+  <thead>
+    <tr>
+      <th><%= t(:sku) %></th>
+      <th><%= t(:name) %></th>
+    <th><%= t(:master_price) %></th>
+    <th><%= t(:action) %></th>
+    </tr>
+  </thead>
+  <tbody>
+<h4><%= "Product list mapped with taxonomy" %> - <%= @taxon.name if @taxon %></h4>
+    <% if products.blank? %>
+     <tr data-hook="taxons_none"><td colspan="3"><%= t(:none) %>.</td></tr>
+     <% else %>
+    <% products.each do |product| %>
+      <tr id="<%= dom_id(product) %>" data-hook="taxons_row">
+        <td><%= product.sku rescue '' %></td>
+        <td><%= product.name rescue '' %></td>
+        <td><%= number_to_currency product.price rescue '' %></td>
+        <td class="actions">
+          <%= link_to_delete product, :url => main_app.remove_product_taxons_path(@taxon, product), :name => icon('delete') + ' ' + t(:remove) %>
+        </td>
+      </tr>
+    <% end %>
+    <% end %>
+  </tbody>
+</table>

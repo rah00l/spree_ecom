@@ -1,0 +1,21 @@
+<table class="index" id="listing_orders" data-hook>
+  <% less_than_sign = params[:reorder_level].present? ? '<' : '' %>
+  <h1><%= t(:product_below_re_order_level) %>&nbsp( <%= less_than_sign %>&nbsp;<%=  params[:reorder_level] %> )</h1>
+  <%= form_tag('low_stock_report') do |f| %>
+    <%= t(:temp_change_reorder_level) %>
+    <%= text_field_tag  'reorder_level' %><br/>
+    <%= t(:exclude_inactive_products) %>
+    <%= check_box_tag 'inactive_products' %><br/>
+    <%= t(:exclude_inactive_min_zero_products) %>
+    <%= check_box_tag "min_zero_products"  %><br/>
+    <%= t(:select_no_of_days_to_sales) %>
+    <%= select_tag 'no_of_days_for_sales',options_for_select(["30 Days","60 Days","90 Days"]) %><br/><br/>
+    <div><%= submit_tag t(:update_report_options) %></div>
+  <% end %>
+  <br />
+    <%if params[:commit].eql?('Update Report Options')%>
+      <%= render "low_stock"  %>
+      <% end %>  
+  
+</table>
+<%#= paginate @orders %>

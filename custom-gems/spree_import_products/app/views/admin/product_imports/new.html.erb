@@ -1,0 +1,38 @@
+<h1><%= t('ep') %></h1>
+<h2><%= t('upload_and_import_ep_file') %></h2>
+
+<%= render "spree/shared/error_messages", :target => @product_import %>
+<form method="post" id="new_product_import" enctype="multipart/form-data" class="new_product_import" action="<%= main_app.admin_product_imports_path(@product_import) %>" accept-charset="UTF-8"><div style="margin:0;padding:0;display:inline">
+    <input type="hidden" value="✓" name="utf8"/>
+    <input type="hidden" value="<%= form_authenticity_token %>" name="authenticity_token"/></div>
+  <fieldset>
+    <p id="product_import_data_file_field" class="">
+      <label for="product_import_data_file">Product Data File</label>
+      <input type="file" name="product_import[data_file]" id="product_import_data_file"/>
+      <%= select_tag "import_type", options_for_select([ "Normal","Add New Only","Update Only","Delete Only" ]) %>
+      <button type="submit" id="create_button"><span> Create</span></button>
+    </p>  </fieldset>
+</form>
+<h2><%= t('export_ep_file') %></h2>
+<%= check_box_tag "select_all" %><span id="select_text">Select All</span>
+<%= form_tag('build_export_file') do |f| %>
+  <fieldset>
+    <p id="product_import_data_file_field" class="product_export_fields">
+      <% Spree::ProductImport::EXPORT_ATTR.each do |attribute| %>
+        <%= check_box_tag "exportable_fields[#{attribute}]"%>
+        <%= attribute.humanize %>
+      <%end%>
+    </p><br/>
+    <p id="product_import_data_file_field" class="product_export_fields">
+      <% Spree::ProductImport::EXPORT_ATTR1.each do |attribute| %>
+        <%= check_box_tag "exportable_fields[#{attribute}]" %>
+        <%= attribute.humanize %>
+      <%end%>
+    </p><br/>
+    filter by:<%= grouped_collection_select(:exportable, :category_id, Spree::Taxonomy.all, :taxons, :name, :id, :name,:prompt => "--categories--") %> &nbsp;&nbsp;&nbsp;&nbsp;
+    <%= select_tag 'exportable_manufacture_id',options_for_select(Spree::Manufacture.order('name').collect{ |manu| [manu.name, manu.id]}),:prompt => "--manufactures--" %>&nbsp;&nbsp;&nbsp;
+    <%= select_tag 'exportable_status',options_for_select(["Active","Inactive"]),:prompt => "--status--" %>&nbsp;&nbsp;&nbsp;
+    <input type="submit" name="commit" value="Build File" id="build_file_button"/>
+  </fieldset>
+<%end%>
+

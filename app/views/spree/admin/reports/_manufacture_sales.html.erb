@@ -1,0 +1,36 @@
+<html>
+  <div align="right">
+    <%= link_to "Export To XLS" ,main_app.manufacture_sales_report_path(request.parameters.merge({:format => :xls})) ,method: :post  %>
+  </div>
+  <table class="index" id="listing_orders" data-hook>
+    <thead>
+      <tr data-hook="admin_orders_index_headers">
+        <th><%= "#{t(:manufacture)} #{t(:name)}" %></th>
+        <th><%= "#{t(:product)} #{t(:sold)}" %></th>
+        <th><%= "#{t(:total)} #{t(:sales)}" %></th>
+        <th><%= "#{t(:percent)} #{t(:margin)}" %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if @manufactures.present? %>
+        <% @manufactures.each do |manufacture| %>
+          <tr data-hook="admin_orders_index_rows"></tr>
+        <td><%= manufacture.name %></td>
+        <% product_sold = 0 %>
+        <% total_sale = 0 %>
+        <% total_cost = 0 %>
+        <% manufacture.products.each do |product| %>
+          <% qty,total,sale,cost = product_sold(product,params[:manufacture_sales][:start_date],params[:manufacture_sales][:end_date]) %>
+          <% product_sold = product_sold + qty %>
+          <% total_sale = total_sale + total %>
+        <% total_sale += sale.to_f %>
+        <% total_cost += cost.to_f %>
+        <% end %>
+        <td><%= (((total_sale.to_f - total_cost.to_f)/(total_sale.to_f))*100).round %></td>
+        <td><%= product_sold %></td>
+        <td><%= number_to_currency total_sale   %></td>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+</html>

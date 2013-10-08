@@ -1,0 +1,41 @@
+<html>
+  <div align="right">
+    <%= link_to "Export To XLS" ,main_app.customer_report_path(request.parameters.merge({:format => :xls})) ,method: :post  %>
+  </div>
+  <table class="index" id="listing_orders" data-hook>
+    <thead>
+      <tr data-hook="admin_orders_index_headers">
+        <th><%= t('no') %></th>
+        <th><%= "#{t(:customers)}" %></th>
+        <th><%= "#{t(:user_group)}" %></th>
+        <th><%= "#{t(:percent)} #{t(:margin)} #{t(:per)} #{t(:order)}" %></th>
+        <% tot_pur = " #{t(:total)} #{t(:purchased)}" %>
+        <th><%= tot_pur %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if @orders.present? %>
+        <% count = 1 %>
+        <% tot_per_margine = 0 %>
+        <% @orders.each do |order| %>
+          <tr data-hook="admin_orders_index_rows"></tr>
+        <td><%= count %></td>
+        <% customer = order.user %>
+        <% name = "#{customer.bill_address.lastname rescue ''}  #{customer.bill_address.firstname rescue ''}" %>
+        <td><%= name rescue '' %></td>
+        <td><%= customer.user_group.name rescue '' %></td>
+        <td><%= margine_per_user = percent_margin(order) %></td>
+        <% tot_per_margine = tot_per_margine.to_i + margine_per_user.to_i %>
+        <td><%= number_to_currency order.total %></td>
+        <% count = count +1 %>
+      <% end %>
+      <tr><h2><td >
+              <b><%= "#{t(:total)} #{t(:percent)} #{t(:margin)}" %></b></td>
+            <td></td>
+            <td></td>
+            <td><b><%= (tot_per_margine.to_f/count.to_f).round %></b></td></h2>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+</html>

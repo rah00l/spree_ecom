@@ -1,0 +1,24 @@
+<html>
+  <h1><%= "#{t(:referral)} #{t(:sources)}"%></h1>
+  <br />
+  <br />
+  <br />
+  <div align="right">
+    <%= link_to "Export To XLS" ,main_app.referral_source_report_path(request.parameters.merge({:format => :xls})) ,method: :post  %>
+  </div>
+  <table class="index" id="listing_orders" data-hook>
+   <thead>
+    <tr data-hook="admin_orders_index_headers">
+      <th><%= t(:sources) %></th>
+      <th><%= t(:referred) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @referral_sources.each do |ref_source| %>
+    <tr data-hook="admin_orders_index_rows"></tr>
+    <td><%= ref_source.name %></td>
+    <td><%= ref_source.users.count %></td>
+    <% end %>
+  </tbody>
+  </table>
+</html>

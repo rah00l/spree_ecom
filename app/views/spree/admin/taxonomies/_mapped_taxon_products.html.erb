@@ -1,0 +1,36 @@
+<div>
+    <%if taxon %>
+    <%= label :from, t(:from) %>
+    <%= text_field "taxonomy","from",value: taxon.name , size: 10 ,disabled: :true %>
+    <% end %>
+    <%if taxon %>
+    <%= label :to, t(:to) %>
+    <%= select("taxonomy","to", taxon_select, {:include_blank => false}) %>
+    <%= link_to icon('add') + ' ' + t(:taxons), '', :id => 'select_taxons_link' ,:remote => false %>
+    <% end %>
+</div>
+
+
+<script>
+  $(document).ready(function(){
+    $('#select_taxons_link').click(function (event) {
+      event.preventDefault();
+      var taxonomy_from = $("#selected_taxonomy_id").val();
+      var taxonomy_to = $('#taxonomy_to').val();
+      //$('#selected-products').show();
+      $.ajax({type: 'POST',
+        url: 'admin/taxons/mapped_taxon_products_copy',
+        data: 
+        {
+          authenticity_token: AUTH_TOKEN,
+          taxonomy_from :taxonomy_from,
+          taxonomy_to :taxonomy_to
+        }      
+      });
+    });
+
+  });
+
+</script>
+
+

@@ -1,0 +1,6 @@
+alert('hello');
+$("#selected-products").html("<%= escape_javascript(render(
+    :partial => '/spree/admin/taxonomies/product_table',
+    :locals => { :products => @products })) %>");
+    
+

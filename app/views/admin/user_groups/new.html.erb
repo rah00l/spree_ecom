@@ -1,0 +1,17 @@
+<%= hook :admin_user_group_new_form_header do %>
+  <%= render 'spree/shared/error_messages', :target => @user_group %>
+  <h1><%= t("new_user_group") %></h1>
+<% end %>
+
+<%= hook :admin_user_group_new_form do %>
+  <%= form_for(:user_group, :url => main_app.admin_user_groups_path) do |f| %>
+    <%= render :partial => "form", :locals => { :f => f } %>
+
+    <%= hook :admin_user_group_new_form_buttons do %>
+          <%= button t(:create) %>
+        <%= t(:or) %> <%= link_to t(:cancel), main_app.admin_user_groups_path %>
+
+      <%#= render :partial => "spree/admin/shared/new_resource_links" %>
+    <% end %>
+  <% end %>
+<% end %>

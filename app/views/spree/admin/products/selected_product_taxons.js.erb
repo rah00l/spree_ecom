@@ -1,0 +1,3 @@
+$("#taxons").html("<%= escape_javascript render(
+  :partial => "select_taxons",
+  :locals => { :taxons => @taxons } ) %>");

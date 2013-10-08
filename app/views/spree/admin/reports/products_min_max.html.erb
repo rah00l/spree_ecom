@@ -1,0 +1,31 @@
+<h1><%= "Products Min Max Report" %> </h1>
+
+<table class="admin-report" data-hook="sales_total">
+  <tbody>
+    <tr>
+    <th><%= t(:sku) %></th>
+    <th><%= t(:name) %></th>
+    <th><%= t(:master_price) %></th>
+    <th><%= t(:max_quantity) %></th>
+    <th><%= t(:count_on_hand) %></th>
+    <th><%= t(:min_quantity) %></th>
+    <th><%= t(:need_to_buy) %></th>
+    </tr>
+    <% @products.each do |product| %>
+    <tr>
+      <td><%= product.sku rescue '' %></td>
+      <td><%= product.name rescue '' %></td>
+      <td><%= number_to_currency product.price rescue '' %></td>
+      <td><%= product.max_quantity rescue '' %></td>
+      <td><%= product.count_on_hand rescue '' %></td>
+      <td><%= product.min_quantity rescue '' %></td>
+      <td><%= need_to_buy(product.max_quantity,product.count_on_hand)  %></td>
+    </tr>
+    <%end%>
+  </tbody>
+</table>
+
+<% content_for :sidebar do %>
+  <%#= render :partial => 'spree/admin/shared/report_criteria', :locals => {} %>
+<% end %>
+

@@ -1,0 +1,7 @@
+<% if @states.present? %>
+  <% states = @states.order(:name) %>
+<% else %>
+  <% states = @user.bill_address.country.states.order(:name) %>
+<% end %>
+<%=  collection_select("user[bill_address_attributes]",:state_id, states,
+                                :id, :name)%>

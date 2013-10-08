@@ -1,0 +1,50 @@
+<div class='toolbar'>
+  <ul class='actions'>
+    <li>
+      <p><%= button_link_to t("new_manufacture"), main_app.new_admin_manufacture_path, :icon => 'add' %></p>
+    </li>
+  </ul>
+  <br class='clear' />
+</div>
+
+<h1><%= t("listing_manufactures") %></h1>
+
+<table class="index">
+  <thead>
+  <tr>
+          <th>name</th>
+    
+    <th>&nbsp;</th>
+  </tr>
+  </thead>
+  <tbody>
+    <% @manufactures.each do |manufacture|%>
+      <tr id="<%= dom_id manufacture %>">
+                  <td width="350px"><%= link_to manufacture.name, main_app.edit_admin_manufacture_path(manufacture) %></td>
+        
+        <%#*<td>%>
+          <%#= link_to_edit manufacture %> &nbsp;
+          <%#= link_to_delete manufacture %>
+        <%#*</td>%>
+
+        <td>
+          <a class="edit icon_link" href="<%= main_app.edit_admin_manufacture_path(manufacture) %>"><img src="/assets/admin/icons/edit.png" alt="Edit"> Edit</a>
+                <a onclick="jConfirm('Are you sure?', 'Confirm Deletion', function(r) {
+      if(r){
+      jQuery.ajax({
+        type: 'POST',
+        url: '<%= main_app.admin_manufacture_path(manufacture) %>',
+        data: ({_method: 'delete', authenticity_token: AUTH_TOKEN}),
+        dataType:'script',
+        success: function(r){ jQuery('#category_<%= manufacture.id %>').fadeOut('hide'); }
+      });
+     }
+    });; return false;" href="#"><img src="/assets/admin/icons/delete.png" alt="delete"> Delete</a>
+        </td>
+
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @manufactures %>

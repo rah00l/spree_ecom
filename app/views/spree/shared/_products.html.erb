@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <%#*<title>Lof JSliderNews 2.0 - Jquery 1.7.x</title>%>
+    <%= stylesheet_link_tag "layout", "style1" %>
+    <%= javascript_include_tag "jquery", "jquery.easing", "script" %>
+    <script type="text/javascript">
+      $(document).ready( function(){
+        // buttons for next and previous item
+        var buttons = { previous:$('#jslidernews1 .button-previous') ,
+          next:$('#jslidernews1 .button-next') };
+        $('#jslidernews1').lofJSidernews( { interval : <%= @config_time %>,
+          direction	: 'opacitys',
+      easing		: 'easeInOutExpo',
+          duration	: 1200,
+          auto		: true,
+          maxItemDisplay  : 4,
+          navPosition     : 'horizontal', // horizontal
+          navigatorHeight : 32,
+          navigatorWidth  : 80,
+          mainWidth	: 980,
+          buttons	: buttons } );
+      });
+    </script>
+  </head>
+  <%
+  paginated_products = @searcher.products if params.key?(:keywords)
+  paginated_products ||= products
+%>
+  <% if products.empty? %>
+    <%= t(:no_products_found) %>
+  <% elsif params.key?(:keywords) %>
+    <h6 class="search-results-title"><%= t(:search_results, :keywords => h(params[:keywords])) %></h6>
+  <% end %>
+  <body>
+    <div id="container">
+      <!------------------------------------- THE CONTENT ------------------------------------------------->
+      <div id="jslidernews1" class="lof-slidecontent" style="width:800px; height:430px;">
+        <div class="preload"><div></div></div>
+        <!-- MAIN CONTENT -->
+        <div class="main-slider-content" style="width:400px; height:400px;">
+          <ul class="sliders-wrap-inner">
+            <% unless @features.blank? %>
+              <% @features.each do |feature| %>
+                <li id="feature_<%= feature.id %>">
+                  
+                  <div Style="float:left; width:400px;">
+                    <div class="slider-meta pro-name"><a target="_parent"  ><%=link_to (feature.name), feature, :class => 'info', :itemprop => "name" %></a></div>
+                          <%= link_to product_image(feature) %></div>
+                  <div class="slider-description">
+                    <p style="font-size: small; color: black;">
+                      <%= truncate("#{feature.description}",:length=> 600) %>
+                    </p>
+                  </div>
+                </li>
+              <%  end %>
+            <% end %>
+          </ul>
+        </div>
+        <!-- END MAIN CONTENT -->
+        <!-- NAVIGATOR -->
+        <div class="navigator-content">
+          <div class="button-next">Next</div>
+          <div class="navigator-wrapper">
+            <ul class="navigator-wrap-inner">
+              <% unless @features.blank? %>
+                <% @features.each do |feature| %>
+                  <li><%= link_to thumb_image(feature)  %></li>
+                <% end %>
+              <% end %>
+            </ul>
+          </div>
+          <div  class="button-previous">Previous</div>
+        </div>
+        <!----------------- END OF NAVIGATOR --------------------->
+        <!-- BUTTON PLAY-STOP -->
+        <div class="button-control"><span></span></div>
+        <!-- END OF BUTTON PLAY-STOP -->
+      </div>
+      <!------------------------------------- END OF THE CONTENT ------------------------------------------------->
+    </div>
+  </body>
+</html>
+<% unless @categories.blank? %>
+<% @categories.each do |cat| %>
+<% set_order = conditional_order(cat.name) %>
+<% set_limit = conditional_limit(cat.name) %>
+<%= cat.name   %>
+<% if cat.products.any? %>
+  <ul id="products" class="inline product-listing" data-hook>
+    <% cat.products.order(set_order).limit(set_limit).each do |product| %>
+    <%  product.see_price_in_the_cart?  %>
+      <% if Spree::Config[:show_zero_stock_products] || product.has_stock? %>
+        <li id="product_<%= product.id %>" class="columns three <%= cycle("alpha", "secondary", "", "omega secondary") %>" data-hook="products_list_item" itemscope itemtype="http://schema.org/Product">
+          <div class="product-image">
+            <% name_link = link_to small_image(product, :itemprop => "name"), product%>
+            <%= product.see_price_in_the_cart? ? small_image(product, :itemprop => "name") :name_link %>
+            <%= product.available_on.strftime("%m-%d-%Y") if cat.name.eql?('Upcoming Products') && product.available_on.present? %>
+          </div>
+          <%= link_to truncate(product.name, :length => 50), product, :class => 'info', :itemprop => "name", :title => product.name %>
+          <span class="price selling" itemprop="price">
+          <% link = link_to"see price in the cart", main_app.see_price_in_cart_path(product) %>
+          <%= product.see_price_in_the_cart? ? link : product.price %>
+          </span>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+<% end  %>
+<% end %>
+
+<% end  %>
+<% if paginated_products.respond_to?(:num_pages)
+  params.delete(:search)
+  params.delete(:taxon)
+%>
+  <%= paginate paginated_products %>
+<% end %>
+

@@ -1,0 +1,8 @@
+<% if @states.present? %>
+  <% states = @states %>
+<% else %>
+  <% @user.bill_address = Spree::Address.default %>
+  <% states = @user.bill_address.country.states.order(:name) %>
+<% end %>
+<%=  collection_select("user[bill_address_attributes]",:state_id, states,
+                                :id, :name)%>

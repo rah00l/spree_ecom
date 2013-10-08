@@ -1,0 +1,111 @@
+<div class="right">
+  <fieldset id="billing" data-hook>
+    <legend><%= t(:billing_address) %></legend>
+    <div class="left">
+      <% @user.bill_address = Spree::Address.default %>
+      <%= f.fields_for :bill_address_attributes do |bill_form| %>
+        <div class="inner" data-hook="billing_inner">
+          <p class="field" id="bfirstname">
+            <%= bill_form.label :firstname, t(:first_name) %><span class="req">*</span><br />
+            <%= bill_form.text_field :firstname, :class => '' %>
+          </p>
+          <p class="field" id="blastname">
+            <%= bill_form.label :lastname, t(:last_name) %><span class="req">*</span><br />
+            <%= bill_form.text_field :lastname, :class => '' %>
+          </p>
+          <% if Spree::Config[:company] %>
+            <p class="field" id="bcompany">
+              <%= bill_form.label :company, t(:company) %><br />
+              <%= bill_form.text_field :company %>
+            </p>
+          <% end %>
+          <p class="field" id="baddress1">
+            <%= bill_form.label :address1, t(:street_address) %><span class="req">*</span><br />
+            <%= bill_form.text_field :address1, :class => '' %>
+          </p>
+          <p class="field" id="baddress2">
+            <%= bill_form.label :address2, t(:street_address_2) %><br />
+            <%= bill_form.text_field :address2 %>
+          </p>
+
+          <p class="field" id="bcity">
+            <%= bill_form.label :city, t(:city) %><span class="req">*</span><br />
+            <%= bill_form.text_field :city, :class => '' %>
+          </p>
+
+
+          <p class="field" id="bcountry">
+            <%= bill_form.label :country_id, t(:country) %><span class="req">*</span><br />
+            <span id="bcountry">
+              <%= bill_form.collection_select :country_id, available_countries, :id, :name, {}, {:class => 'required'} %>
+            </span>
+          </p>
+
+          <p class="field" id="bcountry">
+            <%= bill_form.label :state, t(:state) %><span class="req">*</span><br />
+          <div id="display_states">
+            <%= render  'states' %>
+          </div>
+          </p>
+
+          <p class="field" id="bzipcode">
+            <%= bill_form.label :zipcode, t(:zip) %><span class="req">*</span><br />
+            <%= bill_form.text_field :zipcode, :class => '' %>
+          </p>
+          <legend><%= t(:contact_information) %></legend>
+          <p class="field" id="bphone">
+            <%= bill_form.label :phone, t(:phone) %><span class="">*</span><br />
+            <%= bill_form.text_field :phone, :class => '' %>
+          </p>
+
+          <%  Spree::Config[:alternative_billing_phone] = true %>
+          <% if Spree::Config[:alternative_billing_phone] %>
+            <p class="field" id="baltphone">
+              <%= bill_form.label :alternative_phone, t(:alternative_phone) %><br />
+              <%= bill_form.text_field :alternative_phone %>
+            </p>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <div class="right">
+      <legend><%= t(:options) %></legend>
+      <%= f.field_container :newsletter do %>
+        <%= f.check_box :newsletter %>
+        <%= f.label :newsletter, t(:newsletter) %><br />
+        <%= error_message_on :newsletter, :newsletter %>
+      <% end %>
+
+    </div>
+
+    <div class="right">
+      <legend><%= t(:referral_source) %></legend>
+      <%= f.field_container :referral_source_id do %>
+        <%= f.label :about_us, t(:about_us) %><span class="">*</span><br />
+        <%= select("user","referral_source_id", select_referrals, :prompt => 'Please Select') %>
+        <%= error_message_on :referral_source_id, :referral_source_id %>
+      <% end %>
+
+      <%= f.field_container :other_referral do %>
+        <%= f.label :other_referral, t(:other_referral) %><span class="">*</span><br />
+        <%= f.text_field :other_referral %>
+        <%= error_message_on :other_referral, :other_referral %>
+      <% end %>
+
+    </div>
+  </fieldset>
+</div>
+<!--</div>--->
+<script>
+  $("#user_bill_address_attributes_country_id").change(function(){
+    $.ajax({
+      url: '/products/update_states',
+      type : "get",
+      data: {
+        id : $("#user_bill_address_attributes_country_id").val()
+      },
+      success: function(data) {
+      }
+    });
+  })
+</script>

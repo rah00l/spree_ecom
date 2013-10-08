@@ -1,0 +1,42 @@
+<fieldset id="order_summary" data-hook>
+  <legend><%= t(:order) + " #" + @order.number %></legend>
+  <h1><%= accurate_title %></h1>
+
+<div id="order" data-hook>
+  <% if params.has_key? :checkout_complete %>
+    <h3><%= t(:thank_you_for_your_order) %></h3>
+  <% end %>
+  <%= render :partial => 'spree/shared/order_details', :locals => { :order => @order } %>
+
+  <br class="clear" />
+  <p data-hook="links">
+    <%= link_to t(:back_to_store), spree.root_path, :class => "button" %>
+    <% unless params.has_key? :checkout_complete %>
+      <% if current_user %>
+        <%= link_to t(:my_account), spree.account_path, :class => "button" %>
+      <% end %>
+    <% end %>
+  </p>
+</div>
+  <br />
+<h2>Comments</h2>
+  <table class="index">
+  
+  <% @order.comments.reverse.each_with_index do |comment, index| %>
+    <tr id="<%= dom_id(comment) %>">
+      <% unless @comment_types.blank? %>
+        <td><%= comment.comment_type.name if comment.comment_type %></td>
+      <% end %>
+      <td>
+        <div id="order-comment-header-<%= index %>" class="order-comment-header">
+          <strong><%= comment.user.email%> said:</strong>
+        </div>
+        <div id="order-comment-body-<%= index %>" class="order-comment-body">
+          <%= comment.comment %>
+        </div>
+      </td>
+      <td ><%= comment.created_at.to_formatted_s(:long) %></td>
+     </tr>
+  <% end %>
+</table>
+</fieldset>

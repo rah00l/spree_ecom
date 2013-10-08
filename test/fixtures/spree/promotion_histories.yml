@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  promo_name: MyString
+  starts_at: 2012-05-12 17:16:24
+  expires_at: 2012-05-12 17:16:24
+  user_id: 1
+  promo_code: MyString
+
+two:
+  promo_name: MyString
+  starts_at: 2012-05-12 17:16:24
+  expires_at: 2012-05-12 17:16:24
+  user_id: 1
+  promo_code: MyString

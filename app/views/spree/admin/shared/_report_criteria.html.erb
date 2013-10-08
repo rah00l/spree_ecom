@@ -1,0 +1,21 @@
+<%= form_for @search, :url => params[:action]  do |s| %>
+    <%= label_tag nil, t(:date_range) %><br />
+    <div class="date-range-filter">
+      <div class="left sub-field">
+        <%= s.text_field :created_at_greater_than, :class => 'datepicker' %><br />
+        <%= label_tag nil, t(:start), :class => 'sub' %>
+      </div>
+      <div class="right sub-field">
+        <%= s.text_field :created_at_less_than, :class => 'datepicker' %><br />
+        <%= label_tag nil, t(:stop) %>
+      </div>
+    </div>
+    <% if params[:action].eql?('products_min_max') %>
+     <p>
+      <%= label_tag :products_below_mimimum_quantity, t(:products_below_mimimum_quantity) %><br />
+      <%= check_box_tag 'below_mimimum' %>
+    </p>
+    <%end%>
+
+    <p><%= button t(:search) %></p>
+<% end %>

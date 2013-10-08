@@ -1,0 +1,55 @@
+<html>
+  <div align="right">
+    <%= link_to "Export To XLS" ,main_app.margin_report_path(request.parameters.merge({:format => :xls})) ,method: :post  %>
+  </div>
+  <table class="index" id="listing_orders" data-hook>
+    <thead>
+      <tr data-hook="admin_orders_index_headers">
+        <th><%= t(:order_id) %></th>
+        <th><%= "#{t(:items_sold)}" %></th>
+        <th><%= "#{t(:sales_amount)}" %></th>
+        <th><%= "#{t(:cost)}" %></th>
+        <th><%= "#{t(:gross_profit)}" %></th>
+        <% per_mar = " #{t(:percent)} #{t(:margin)}" %>
+        <th><%= per_mar %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if @orders.present? %>
+        <% count,tot_qty,tot_sale_price,tot_cost_price,tot_gross_profit,tot_margin = 0,0,0,0,0,0 %>
+        <% @orders.each do |order| %>
+        <tr data-hook="admin_orders_index_rows"></tr>
+        <td><%= order.number rescue '' %></td>
+        <% qty,sale_price,cost_price = order_detail(order)%>
+        <td><%= qty %></td>
+        <td><%= number_to_currency sale_price %></td>
+        <td><%= number_to_currency cost_price %></td>
+        <% gross_profit = (sale_price.to_f - cost_price.to_f) %>
+        <td><%= number_to_currency gross_profit %></td>
+        <td><%=  margin = (((gross_profit.to_f)/sale_price.to_f)*100).round %></td>
+        <% tot_qty += qty %>
+        <% tot_sale_price += sale_price.to_f %>
+        <% tot_cost_price += cost_price.to_f %>
+        <% tot_gross_profit += gross_profit.to_f %>
+        <% tot_margin += margin.to_i %>
+        <% count = count +1 %>
+      <% end %>
+        </tbody>
+        </table>
+        <br />
+      <tr>
+        <td ><font size="3">
+          <%= "#{t(:total)} #{t(:sold)} #{t(:product)}" %><font/></td>&nbsp;&nbsp;:&nbsp;<%= tot_qty %><br/>
+        <td ><font size="3">
+          <%= "#{t(:total)} #{t(:sales)} #{t(:amount)}" %><font/></td>&nbsp;&nbsp;:&nbsp;<%= number_to_currency tot_sale_price %><br/>
+        <td ><font size="3">
+          <%= "#{t(:total)} #{t(:cost)}" %><font/></td>&nbsp;&nbsp;:&nbsp;<%= number_to_currency tot_cost_price %><br/>
+        <td ><font size="3">
+          <%= "#{t(:total)} #{t(:margin)}" %><font/></td>&nbsp;&nbsp;:&nbsp;<%= (tot_margin.to_i/count).round(2) %> % <br />
+        <td ><font size="3">
+          <%= "#{t(:gross_profit)} #{t(:total)}" %><font/></td>&nbsp;&nbsp;:&nbsp;<%= number_to_currency tot_gross_profit %>
+    </tr>
+    <% end %>
+  
+
+</html>

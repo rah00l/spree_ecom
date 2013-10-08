@@ -1,0 +1,27 @@
+<table class="index" id='listing_taxonomies' data-hook>
+  <tr data-hook="taxonomies_header">
+    <th><%= t(:tree) %></th>
+    <th><%= t(:name) %></th>
+    <th><%= t(:action) %></th>
+  </tr>
+<% @taxonomies.each do |taxonomy| %>
+  <tr id="<%= dom_id taxonomy %>" data-hook="taxonomies_row">
+    <td>
+      <div>
+      <%= label_tag nil, t(:tree) %><br />
+      <div id="taxonomy_tree" class="tree" data-url="<%#= main_app.admin_taxonomy_taxons_path @taxonomy %>"></div>
+    </div>
+    </td>
+    <td>
+      <%= taxonomy.name %>
+    </td>
+    <td class="actions">
+      <a class="edit icon_link" href="<%= edit_admin_taxonomy_path(taxonomy) %>"><img src="/assets/admin/icons/edit.png" alt="Edit"> Edit</a>
+      &nbsp;
+      <%#= link_to_delete taxonomy %>
+    </td>
+
+  </tr>
+<% end %>
+</table>
+

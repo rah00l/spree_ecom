@@ -1,0 +1,47 @@
+<table class="index" id="listing_orders" data-hook>
+  <h1><%= "#{t(:margin)} #{t(:report)}" %></h1>
+  <%= form_tag('margin_report') do |f| %>
+    <fieldset id="expiry_fields">
+      <legend><%= t(:select_date_range) %></legend>
+      <p id="starts_at_field">
+        <%= t(:start_date) %>
+        <% start_value = params[:margin].present? ? params[:margin][:start_date] : '' %>
+        <% end_value = params[:margin].present? ? params[:margin][:end_date] : '' %>
+        <%= text_field :margin, :start_date, :class => 'datepicker',:value => start_value %>&nbsp;&nbsp;
+        <%=  t(:ends_date) %>
+        <%= text_field :margin, :end_date, :class => 'datepicker' ,:value => end_value %>&nbsp;&nbsp;&nbsp;&nbsp;
+        <%= "#{t(:order)} #{t(:state)}"  %>
+        <% order_state = params[:order_state]  if params[:order_state]%>
+        <%= select_tag 'order_state',options_for_select(["cart","delivery","payment","confirm","complete"],params[:order_state]) %>&nbsp;&nbsp;&nbsp;&nbsp;
+        <%= submit_tag t(:update_report_options) ,id: "update_report_options" %>
+      </p>
+    </fieldset>
+  <% end %>
+  <br />
+  <%if params[:commit].eql?('Update Report Options')%>
+    <%= render "margin"  %>
+  <% end %>
+
+</table>
+<%#= paginate @orders %>
+
+<script>
+  $("#update_report_options").live("click",function(){
+    var start_date = $("#margin_start_date").val();
+    var end_date = $("#margin_end_date").val();
+    var alertReason =  'End Date must be greater than or equal to  Start Date.'
+    if(start_date != '' && end_date != '' &&  start_date > end_date)
+    {
+        alert(alertReason);
+        return false;
+    }
+    else if(start_date == ''){
+        alert("Please Select Start Date");
+        return false;
+    }
+    else if(end_date == ''){
+        alert("Please Select End Date");
+        return false;
+    }
+  });
+</script>

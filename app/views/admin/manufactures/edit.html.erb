@@ -1,0 +1,31 @@
+<%= hook :admin_manufacture_edit_form_header do %>
+  <%= render 'spree/shared/error_messages', :target => @manufacture %>
+  <h1><%= t("editing_manufacture") %></h1>
+<% end %>
+
+<%= hook :admin_manufacture_edit_form do %>
+  <%= form_for(:manufacture, :url => main_app.admin_manufacture_path, :html => { :method => :put }) do |f| %>
+    <%= render :partial => "form", :locals => { :f => f } %>
+
+
+<h4><%= select = "#{t(:enter)} #{t(:user_groups)} #{t(:percent_discount)}" %></h4>
+
+  <% @manufacture.manu_user_groups.each_with_index do |manu_user_groups,idx| %>
+        <%= f.label manu_user_groups.user_group.name %>
+        <% id = "manufacture_manu_user_groups_attributes"+"_#{idx}_"+"price_discount" %>
+        <% hidden_id = "manufacture_manu_user_groups_attributes"+"_#{idx}_"+"id" %>
+        <% name = "manufacture[manu_user_groups_attributes]"+"[#{idx}]"+"[price_discount]" %>
+        <% hidden_name = "manufacture[manu_user_groups_attributes]"+"[#{idx}]"+"[id]" %>
+        <%= text_field_tag "#{hidden_id}","#{manu_user_groups.id}",:type => "hidden",:size => 6, :name => "#{hidden_name}"%>
+        <%= text_field_tag "#{id}",manu_user_groups.price_discount,:size => 6, :name => "#{name}"%>
+      <br />
+    <% end %>
+    
+
+    <%= hook :admin_manufacture_edit_form_buttons do %>
+        <%= button t(:update) %>
+        <%= t(:or) %> <%= link_to t(:cancel), main_app.admin_manufactures_path %>
+      <%#= render :partial => "admin/shared/edit_resource_links" %>
+    <% end %>
+  <% end %>
+<% end %>

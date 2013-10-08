@@ -1,0 +1,12 @@
+<%= hook :admin_category_edit_form_header do %>
+  <%= render 'spree/shared/error_messages', :target => @category %>
+  <h1><%= "Products Under" "   "  " '#{@category.name}'"   %></h1>
+<% end %>
+   <%= render 'product_listing', :target => @products %>
+<%#= paginate @products %>
+
+<p class="form-buttons" data-hook="buttons">
+  <%= link_to t(:cancel), main_app.admin_categories_url %>
+</p>
+
+

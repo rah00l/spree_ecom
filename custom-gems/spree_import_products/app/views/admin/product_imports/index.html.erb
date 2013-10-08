@@ -1,0 +1,39 @@
+
+<div class='toolbar'>
+  <ul class='actions'>
+    <li>
+      <p><%= button_link_to t("new"), main_app.new_admin_product_import_url, :icon => 'add' %></p>
+    </li>
+  </ul>
+  <br class='clear' />
+</div>
+<p>
+    <% unless @imported_products.blank? %>
+
+    <table id="listing_products" class="index">
+      <tbody><tr data-hook="admin_products_index_headers">
+          <th>File Name</th>
+          <th> Log Path  </th>
+          <th> Products Added </th>
+          <th> Products Updated </th>
+          <th> Actions </th>
+        </tr>
+       <% @imported_products.each do |imported_product| %>
+        <tr data-hook="admin_products_index_rows">
+
+          <td><%= link_to(imported_product.data_file_file_name, main_app.product_imports_download_file_path(imported_product.id),:target=>"_blank" ) %></a></td>
+
+          <td><% link_to("Check log", main_app.product_imports_log_file_path(imported_product.id),:target=>"_blank" ) %></a></td>
+          <td><%= imported_product.products_added %></td>
+          <td><%= imported_product.products_failed %></td>
+          <td><%= link_to("delete", main_app.destroy_product_imports_path(imported_product.id),:confirm => "Are you sure?")%></td>
+        </tr>
+        <% end  %>
+
+
+      </tbody></table>
+       <%#= will_paginate @imported_products %>
+  <% end %>
+  </p>
+
+

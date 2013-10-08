@@ -1,0 +1,4 @@
+$("#xyz").html("<%= escape_javascript render(
+  :partial => "states",
+  :locals=>{:states => @states} ) %>");
+

@@ -1,0 +1,60 @@
+<div class="left">
+<fieldset id="billing" data-hook>
+   <legend><%= t(:personal_details) %></legend>
+  <div data-hook="admin_user_form_fields">
+  <%= f.field_container :email do %>
+    <%= f.label :email, t(:email) %><br />
+    <%= f.email_field :email %>
+    <%= error_message_on :user, :email %>
+  <% end %>
+
+  <%= f.field_container :password do %>
+    <%= f.label :password, t(:password) %><br />
+    <%= f.password_field :password %>
+    <%= f.error_message_on :password %>
+  <% end %>
+
+  <%= f.field_container :password do %>
+    <%= f.label :password_confirmation, t(:confirm_password) %><br />
+    <%= f.password_field :password_confirmation %>
+    <%= f.error_message_on :password_confirmation %>
+  <% end %>
+
+
+  <%= f.field_container :set_no_shipping_charges do %>
+    <%= f.check_box :set_no_shipping_charges %>
+    <%= f.label :set_no_shipping_charges, t(:set_no_shipping_charges) %><br />
+    <%= error_message_on :set_no_shipping_charges, :set_no_shipping_charges %>
+  <% end %>
+
+  <%= f.field_container :set_no_sales_tax do %>
+    <%= f.check_box :set_no_sales_tax %>
+    <%= f.label :set_no_sales_tax, t(:set_no_sales_tax) %><br />
+    <%= error_message_on :set_no_sales_tax, :set_no_sales_tax %>
+  <% end %>
+
+    <%= f.field_container :user_group_id do %>
+      <%= f.label :select_user_group, t(:select_user_group) %><br />
+      <%= select("user","user_group_id", user_groups_for_select, {:include_blank => false}) %>
+      <%= error_message_on :set_no_sales_tax, :set_no_sales_tax %>
+    <% end %>
+</div>
+
+
+<% if @user.respond_to?(:roles) %>
+  <div data-hook="admin_user_form_roles">
+    <p>
+      <%= label_tag nil, t(:roles) %><br />
+      <% @roles.each do |role| %>
+        <label class="sub">
+          <%= check_box_tag "user[role][#{role.name}]", 1, @user.has_role?(role.name) %>
+          <%= role.name %>
+        </label> &nbsp;
+      <% end %>
+    </p>
+  </div>
+<% end %>
+<br/>
+</fieldset>
+</div>
+  

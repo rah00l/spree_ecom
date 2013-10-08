@@ -1,0 +1,37 @@
+<html>
+  <div align="right">
+    <%= link_to "Export To XLS" ,main_app.low_stock_report_path(request.parameters.merge({:format => :xls})) ,method: :post  %>
+  </div>
+  <table class="index" id="listing_orders" data-hook>
+     <% no_of_days = params[:no_of_days_for_sales].present? ? params[:no_of_days_for_sales]: '' %>
+     <% no_of_days.gsub!(' Days','') %>
+   <thead>
+    <tr data-hook="admin_orders_index_headers">
+      <th><%= t('no') %></th>
+      <% product_name = "#{t(:product)}  #{t(:name)}" %>
+      <th><%= product_name %></th>
+      <% quantity_available = "#{t(:quantity)} #{t(:available)}" %>
+      <th><%= quantity_available %></th>
+      <th><%= t(:model) %></th>
+      <th><%= no_of_days %><%= t(:day_sales) %></th>
+      <th><%= "Remaning Supply Days" %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% count = 1 %>
+    <% if @products.present? %>
+    <% @products.each do |product| %>
+    <tr data-hook="admin_orders_index_rows"></tr>
+    <td><%= count %></td>
+    <td><%= product.name rescue '' %></td>
+    <td><%= product.count_on_hand %></td>
+    <td><%= product.sku rescue ''%></td>
+    <td><%= qty = no_of_days_product_sold(product,no_of_days) %></td>
+    <td><%= remaining_stock_supply(qty,no_of_days,product.count_on_hand) %></td>
+    <% count = count +1 %>
+    <% end %>
+    <% end %>
+  </tbody>
+  
+  </table>
+</html>

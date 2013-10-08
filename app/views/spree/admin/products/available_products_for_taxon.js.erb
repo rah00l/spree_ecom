@@ -1,0 +1,44 @@
+<h4><%= t(:available_products) %></h4>
+<table class="index">
+  <thead>
+    <tr>
+      <th><%= t(:sku) %></th>
+      <th><%= t(:name) %></th>
+    <th><%= t(:master_price) %></th>
+    <th><%= t(:action) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @products.each do |product| %>
+      <tr id="<%= dom_id(product, :sel) %>">
+        <td><%= product.sku rescue '' %></td>
+        <td><%= product.name rescue '' %></td>
+        <td><%= number_to_currency product.price rescue '' %></td>
+        <td class="actions">
+          <%= link_to icon(:add) + ' ' + t(:select),
+                            main_app.select_products_path(product,@taxon),
+                            :class => 'iconlink' %>
+        </td>
+      </tr>
+    <% end %>
+    <% if @products.empty? %>
+     <tr><td colspan="3"><%= t(:no_match_found) %>.</td></tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<script>
+  $(document).ready(function(){
+    $('.iconlink').click(function (event) {
+      event.preventDefault();
+      $(this).hide();
+      $('#selected-products').show();
+      $.ajax({type: 'GET',
+        url: this.href,
+        data: ({authenticity_token: AUTH_TOKEN})
+      });
+    });
+
+  });
+</script>

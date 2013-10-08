@@ -1,0 +1,45 @@
+<table class="index" id="listing_orders" data-hook>
+  <% best_customer_orders_total = "#{t(:best)} #{t(:customer)} #{t(:order)} #{t(:total)}" %>
+  <h1><%= best_customer_orders_total %></h1>
+  <%= form_tag('customer_report') do |f| %>
+    <fieldset id="expiry_fields">
+      <legend><%= t(:select_date_range) %></legend>
+      <p id="starts_at_field">
+        <%= t(:start_date) %>
+        <% start_value = params[:customer].present? ? params[:customer][:start_date] : '' %>
+        <% end_value = params[:customer].present? ? params[:customer][:end_date] : '' %>
+        <%= text_field :customer, :start_date, :class => 'datepicker',:value => start_value %>&nbsp;&nbsp;
+        <%=  t(:ends_date) %>
+        <%= text_field :customer, :end_date, :class => 'datepicker' ,:value => end_value %>&nbsp;&nbsp;&nbsp;&nbsp;
+        <%= submit_tag t(:update_report_options) ,id: "update_report_options" %>
+      </p>
+    </fieldset>
+  <% end %>
+  <br />
+  <%if params[:commit].eql?('Update Report Options')%>
+    <%= render "customer"  %>
+  <% end %>
+
+</table>
+<%#= paginate @orders %>
+
+<script>
+  $("#update_report_options").live("click",function(){
+    var start_date = $("#customer_start_date").val();
+    var end_date = $("#customer_end_date").val();
+    var alertReason =  'End Date must be greater than or equal to  Start Date.'
+    if(start_date != '' && end_date != '' &&  start_date > end_date)
+    {
+        alert(alertReason);
+        return false;
+    }
+    else if(start_date == ''){
+        alert("Please Select Start Date");
+        return false;
+    }
+    else if(end_date == ''){
+        alert("Please Select End Date");
+        return false;
+    }
+  });
+</script>

@@ -1,0 +1,45 @@
+<h1><%= t(:listing_reports) %></h1>
+<table class="index">
+  <thead>
+    <tr data-hook="reports_header">
+      <th><%= t(:name) %></th>
+      <th><%= t(:description) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @reports.each do |key, value| %>
+      <tr data-hook="reports_row">
+        <td><%= link_to value[:name], send("#{key}_admin_reports_url".to_sym) %></td>
+        <td><%= value[:description] %></td>
+      </tr>
+    <% end %>
+    <tr><td><%= link_to "Products below mimimum quantity" , main_app.products_below_mimimum_quantity_path , method: :post %></td>
+      <td><%=  "Products below mimimum quantity"%></td>
+    </tr>
+    <tr><td><%= link_to t("low_stock_report") , main_app.low_stock_report_path , method: :post %></td>
+      <td><%=  t("low_stock_report") %></td>
+    </tr>
+    
+    <% customer_rpt = "#{t(:customer)} #{t(:report)}" %>
+    <tr><td><%= link_to customer_rpt , main_app.customer_report_path , method: :post %></td>
+      <td><%=  customer_rpt %></td>
+    </tr>
+
+    <% manufacture_sales_rpt = "#{t(:manufacture)} #{t(:sales)} #{t(:report)}" %>
+    <tr><td><%= link_to manufacture_sales_rpt , main_app.manufacture_sales_report_path , method: :post %></td>
+      <td><%=  manufacture_sales_rpt %></td>
+    </tr>
+
+    <% ref_src_rpt = "#{t(:referral)}  #{t(:sources)} #{t(:report)}" %>
+    <tr><td><%= link_to ref_src_rpt , main_app.referral_source_report_path , method: :post %></td>
+      <td><%=  ref_src_rpt %></td>
+    </tr>
+
+    <% margin_report = "#{t(:margin)} #{t(:report)}" %>
+    <tr><td><%= link_to margin_report , main_app.margin_report_path , method: :post %></td>
+      <td><%=  margin_report %></td>
+    </tr>
+
+  </tbody>
+</table>
+

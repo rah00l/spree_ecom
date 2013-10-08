@@ -1,0 +1,47 @@
+<div class='toolbar'>
+  <ul class='actions'>
+    <li>
+      <p><%= button_link_to t("new"), main_app.new_admin_category_path, :icon => 'add' %></p>
+    </li>
+  </ul>
+  <br class='clear' />
+</div>
+
+<h1><%= t("listing front_page_highlights") %></h1>
+
+<table class="index">
+  <thead>
+  <tr>
+          <th><%=  t("name")%></th>
+          <th><%=  t("status")%></th>
+          <th><%=  t("no_of_rows_to_show")%></th>
+    
+    <th>&nbsp;</th>
+  </tr>
+  </thead>
+  <tbody>
+    <% @categories.each do |category|%>
+      <tr id="<%= dom_id category %>">
+         <td width="350px"><%= link_to category.name, main_app.admin_category_path(category) %></td>
+         <td width="350px"><%= category.activate.present? ? "Activated" : "In Activated"%></td>
+         <td width="350px"><%= category.no_of_rows_to_show%></td>
+        <td>
+          <a class="edit icon_link" href="<%= main_app.edit_admin_category_path(category) %>"><img src="/assets/admin/icons/edit.png" alt="Edit"> Edit</a>
+                <a onclick="jConfirm('Are you sure?', 'Confirm Deletion', function(r) {
+      if(r){
+      jQuery.ajax({
+        type: 'POST',
+        url: '<%= main_app.admin_category_url(category) %>',
+        data: ({_method: 'delete', authenticity_token: AUTH_TOKEN}),
+        dataType:'script',
+        success: function(r){ jQuery('#category_<%= category.id %>').fadeOut('hide'); }
+      });
+     }
+    });; return false;" href="#"><img src="/assets/admin/icons/delete.png" alt="delete"> Delete</a>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @categories %>

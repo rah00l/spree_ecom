@@ -1,0 +1,75 @@
+<style>
+#slider{
+width:965px;
+}
+</style>
+<script type="text/javascript">
+
+jQuery(function() {
+    
+jQuery('#slider').slider({
+range: true,
+min:0,
+max: 100,
+values:[0,10],
+slide: function(event, ui) {
+jQuery( "#percent" ).val( ui.values[ 0 ] + " - Percentages - " + ui.values[ 1 ]+" - Percentages ");
+var total_order = '<%=  @order.total %>'
+jQuery( "#adjustment_amount" ).val(ui.values[ 1 ]);
+calculate_discount(total_order,ui.values[ 1 ])
+}
+});
+
+jQuery( "#percent" ).val( jQuery( "#slider" ).slider( "values", 0 ) + " Percentages - "
++ jQuery( "#slider" ).slider( "values", 1 ) + " - Percentages ") ;
+
+function calculate_discount(total_order,discount)
+{
+ var total_discount = (total_order * discount) / 100;
+ jQuery( "#adjustment_amount" ).val(0 - total_discount.toFixed(2));
+}
+
+jQuery('#adjustment_amount').blur(function() {
+  var total_order = '<%=  @order.total %>'
+  var discount_amount = jQuery('#adjustment_amount').val();
+  var total_discount_percentage = ((discount_amount * 100) / total_order).toFixed(0);
+  jQuery( "#percent" ).val( 0 + " - Percentages - " + total_discount_percentage +" - Percentages ")
+});
+
+});
+</script>
+
+
+<p>Percentage Discount</p>
+
+<input type="text" id="percent" style="border:0; color:black; font-weight:bold;" />
+<table>
+  <tr>
+    <td>0</td>
+    <td>10</td>
+    <td>20</td>
+<td>30</td>
+<td>40</td>
+<td>50</td>
+<td>60</td>
+<td>70</td>
+<td>80</td>
+<td>90</td>
+<td>100</td>
+</tr></table>
+<div id="slider"></div>
+<br/>
+
+
+<%= f.field_container :amount do %>
+  <%= f.label :amount, t(:amount) %> <span class="required">*</span><br />
+  <%= text_field :adjustment, :amount, {:style => 'width:80px;'} %>
+  <%= f.error_message_on :amount %>
+<% end %>
+
+<%= f.field_container :label do %>
+  <%= f.label :label, t(:description) %> <span class="required">*</span><br />
+  <%= text_field :adjustment, :label, {:style => 'width:180px;'} %>
+  <%= f.error_message_on :label %>
+<% end %>
+
